@@ -21,6 +21,3 @@ def filter_third():
 
 
 
-
-
-filter_first(0).to_csv("abacate.csv")
