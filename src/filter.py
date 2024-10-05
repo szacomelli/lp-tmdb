@@ -12,7 +12,10 @@ def filter_first(votes_minimum):
 
 def filter_second():
     data = file[['name', 'vote_count', 'vote_average', 'popularity', 'genres', 'networks']].replace(to_replace=0, value=np.nan).dropna().index
-    return (file.loc[data]).copy()
+    file_votes = (file.loc[data]).copy()
+    (file_votes[file_votes['vote_count'] > 0]).copy()
+    file_votes['genres'] = file_votes['genres'].str.split(", ")
+    return file_votes.explode('genres')
 
 def filter_third():
     data = file[['name', 'vote_count', 'vote_average', 'popularity', 'genres', 'networks']].replace(to_replace=0, value=np.nan).dropna().index
