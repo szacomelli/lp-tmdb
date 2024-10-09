@@ -64,6 +64,13 @@ def filter_second(shows_minimum : int, date_interval : list[int]=[0, 9999]) -> p
         [1057 rows x 29 columns]
         
     """
+    if not isinstance(shows_minimum, int) or not isinstance(date_interval[0], int) or len(date_interval) != 2:# or not isinstance(date_interval[1], int):
+        raise TypeError("check the argument types")
+    if not isinstance(date_interval[1], int):
+        raise TypeError("check the argument types")
+    if date_interval[0] > date_interval[1]:
+        raise ValueError("the first element of date_interval must be less or equal the second")
+    
     raw_data = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'genres', 'networks', 'first_air_date']].replace(to_replace=0, value=np.nan).dropna()
     data_index = raw_data[[int(item[0]) >= date_interval[0] and int(item[0]) <= date_interval[1] for item in raw_data['first_air_date'].str.split('-')[:].tolist()]].index
     flt_data = (raw_file.loc[data_index]).copy()
@@ -130,6 +137,9 @@ def filter_third(shows_minimum : int, votes_minimum : int=1) -> pd.DataFrame:
 
         
     """
+    if not isinstance(shows_minimum, int) or not isinstance(votes_minimum, int): 
+        raise TypeError("check the argument types")
+    
     data_idx = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'networks']].replace(to_replace=0, value=np.nan).dropna().index
     raw_data = raw_file.loc[data_idx]
     flt_data = (raw_data[raw_data['vote_count'] >= votes_minimum]).copy()
