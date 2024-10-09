@@ -21,7 +21,7 @@ def filter_second(series_minimum : int):
     flt_file = flt_file[flt_file['networks'].isin(net_list)]
     return flt_file.copy()
 
-def filter_third(votes_minimum):
+def filter_third(votes_minimum : int):
     data = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'networks']].replace(to_replace=0, value=np.nan).dropna().index
     file_votes = raw_file.loc[data]
     return (file_votes[file_votes['vote_count'] > votes_minimum]).copy()
