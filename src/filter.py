@@ -5,10 +5,24 @@ import numpy as np
 file_path = "data/TMDB_tv_dataset_v3.csv"
 raw_file = pd.read_csv(file_path, delimiter=",")
 
-def filter_first(votes_minimum : int) -> pd.DataFrame:
-    data = raw_file[['name', 'vote_count', 'vote_average', 'number_of_seasons', 'number_of_episodes']].replace(to_replace=0, value=np.nan).dropna().index
-    file_votes = raw_file.loc[data]
-    return (file_votes[file_votes['vote_count'] > votes_minimum]).copy()
+def filter_first(votes_minimum: int = 0) -> pd.DataFrame:
+    # Ensure that shows with episodes but no seasons are assigned at least one season
+    raw_file.loc[(raw_file['number_of_episodes'] > 0) & (raw_file['number_of_seasons'] == 0), 'number_of_seasons'] = 1
+
+
+    # Filter out shows with no votes and no episodes
+    df_filtered = raw_file[(raw_file['vote_count'] >= votes_minimum) & (raw_file['number_of_episodes'] > 0)].copy()
+    
+    df_index = df_filtered[['name', 'vote_count', 'vote_average', 'number_of_episodes']].replace(to_replace=0, value=np.nan).dropna().index
+    df_filtered = df_filtered.loc[df_index].copy()
+    
+    # Calculate the average number of episodes per season
+    df_filtered['avg_ep_per_season'] = np.floor(df_filtered['number_of_episodes'] / df_filtered['number_of_seasons'])
+    
+    # Drop rows with NaN values in 'vote_average'
+    df_filtered = df_filtered.dropna(subset=['vote_average'])
+    
+    return df_filtered
 
 def filter_second(shows_minimum : int, date_interval : list[int]=[0, 9999]) -> pd.DataFrame:
     """
@@ -28,6 +42,13 @@ def filter_second(shows_minimum : int, date_interval : list[int]=[0, 9999]) -> p
     -------
     pandas.Dataframe
         The filtered version of the dataset.
+
+    Raises
+    ------
+    TypeError:
+        When shows_minimum isn't instances of int, or date_interval isn't a list of two integers.
+    ValueError:
+        When the first element of date_interval is greater than the second.  
 
     Examples
     --------
@@ -64,6 +85,13 @@ def filter_second(shows_minimum : int, date_interval : list[int]=[0, 9999]) -> p
         [1057 rows x 29 columns]
         
     """
+    if not isinstance(shows_minimum, int) or not isinstance(date_interval[0], int) or len(date_interval) != 2:
+        raise TypeError("check the argument types")
+    if not isinstance(date_interval[1], int):
+        raise TypeError("check the argument types")
+    if date_interval[0] > date_interval[1]:
+        raise ValueError("the first element of date_interval must be less or equal the second")
+    
     raw_data = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'genres', 'networks', 'first_air_date']].replace(to_replace=0, value=np.nan).dropna()
     data_index = raw_data[[int(item[0]) >= date_interval[0] and int(item[0]) <= date_interval[1] for item in raw_data['first_air_date'].str.split('-')[:].tolist()]].index
     flt_data = (raw_file.loc[data_index]).copy()
@@ -92,6 +120,11 @@ def filter_third(shows_minimum : int, votes_minimum : int=1) -> pd.DataFrame:
     -------
     pandas.Dataframe
         The filtered version of the dataset.
+
+    Raises
+    ------
+    TypeError:
+        When shows_minimum or votes_minimum aren't instances of int.   
 
     Examples
     --------
@@ -130,6 +163,9 @@ def filter_third(shows_minimum : int, votes_minimum : int=1) -> pd.DataFrame:
 
         
     """
+    if not isinstance(shows_minimum, int) or not isinstance(votes_minimum, int): 
+        raise TypeError("check the argument types")
+    
     data_idx = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'networks']].replace(to_replace=0, value=np.nan).dropna().index
     raw_data = raw_file.loc[data_idx]
     flt_data = (raw_data[raw_data['vote_count'] >= votes_minimum]).copy()
