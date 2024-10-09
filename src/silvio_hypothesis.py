@@ -1,9 +1,10 @@
-from filter import filter_second
 import numpy as np
 import pandas as pd
 import matplotlib
 matplotlib.use('TkAgg') 
 import matplotlib.pyplot as plt
+
+from filter import filter_second
 
 def most_frequent_genre(top_n : int, shows_minimum : int=0, years_interval : list[int]=[0,9999]) -> None:
     """
@@ -28,12 +29,22 @@ def most_frequent_genre(top_n : int, shows_minimum : int=0, years_interval : lis
     The function won't return anything, but plots a pyplot bar graph.
     Expects a bar graph with networks:(series) as x_labels and absolute count of frequency as y_label
     """
+    if not isinstance(top_n, int) or not isinstance(shows_minimum, int) or not isinstance(years_interval[0], int) \
+            or not isinstance(years_interval, list) or len(years_interval) != 2:
+        raise TypeError("check the argument types")
+    if not isinstance(years_interval[1], int):
+        raise TypeError("check the argument types")
+    if years_interval[0] > years_interval[1]:
+        raise ValueError("the first element of years_interval must be less or equal the second")
+    
     raw_data = filter_second(shows_minimum, years_interval).groupby(['genres', 'networks'])['networks'].value_counts().reset_index()
     data_idx = raw_data.groupby('networks')['count'].idxmax()
     top_data = raw_data.loc[data_idx].copy()
     top_data = raw_data.sort_values('count', ascending=False).head(top_n)
     top_data['for_plot'] = top_data['networks'] + ": (" + top_data['genres'] + ")"
     
+    if top_data.empty:
+        raise ValueError("shows_minimum can't be greater then the highest count of shows per network")
     plot_bar(top_data.set_index('for_plot'), "Gêneros mais frequentes por plataforma", "Plataforma", "Frequência média", years_interval)
     return
 
@@ -60,6 +71,14 @@ def most_voted_genre(top_n : int, shows_minimum : int=0, years_interval : list[i
     The function won't return anything, but plots a pyplot bar graph.
     Expects a bar graph with networks:(series) as x_labels and vote average of genre as y_label
     """
+    if not isinstance(top_n, int) or not isinstance(shows_minimum, int) or not isinstance(years_interval[0], int) \
+            or not isinstance(years_interval, list) or len(years_interval) != 2:
+        raise TypeError("check the argument types")
+    if not isinstance(years_interval[1], int):
+        raise TypeError("check the argument types")
+    if years_interval[0] > years_interval[1]:
+        raise ValueError("the first element of years_interval must be less or equal the second")
+    
     raw_data = filter_second(shows_minimum, years_interval)
     raw_data['average'] = raw_data['vote_count']*raw_data['vote_average']
     raw_data = raw_data.groupby(['genres', 'networks']).sum(['average', 'vote_count']).reset_index()[['networks', 'genres', 'average', 'vote_count']]
@@ -68,7 +87,9 @@ def most_voted_genre(top_n : int, shows_minimum : int=0, years_interval : list[i
     top_data = raw_data.loc[data_idx].copy()
     top_data['for_plot'] = top_data['networks'] + ": (" + top_data['genres'] + ")"
     top_data = top_data[['for_plot', 'final_average']].sort_values('final_average', ascending=False).head(top_n)
-    
+
+    if top_data.empty:
+        raise ValueError("shows_minimum can't be greater then the highest count of shows per network")
     plot_bar(top_data.set_index('for_plot'), "Gêneros mais votados por plataforma", "Plataforma", "Média de votos", years_interval)
     return
 
@@ -98,6 +119,14 @@ def most_popular_genre(top_n : int, shows_minimum : int=0, years_interval : list
     metrics in a daily basis, along with aired date and some other information.
     To know more, consult https://developer.themoviedb.org/docs/popularity-and-trending
     """
+    if not isinstance(top_n, int) or not isinstance(shows_minimum, int) or not isinstance(years_interval[0], int) \
+            or not isinstance(years_interval, list) or len(years_interval) != 2:       
+        raise TypeError("check the argument types")
+    if not isinstance(years_interval[1], int):
+        raise TypeError("check the argument types")
+    if years_interval[0] > years_interval[1]:
+        raise ValueError("the first element of years_interval must be less or equal the second")
+    
     raw_data = filter_second(shows_minimum, years_interval).groupby(['genres', 'networks']).mean('popularity').reset_index()[['networks', 'genres', 'popularity']]
     raw_data['popularity_log'] = np.log(raw_data['popularity'])
     data_idx = raw_data.groupby('networks')['popularity_log'].idxmax()
@@ -105,11 +134,14 @@ def most_popular_genre(top_n : int, shows_minimum : int=0, years_interval : list
     top_data['for_plot'] = top_data['networks'] + ": (" + top_data['genres'] + ")"
     top_data = top_data[['for_plot', 'popularity_log']].sort_values('popularity_log', ascending=False).head(top_n)
 
+    if top_data.empty:
+        raise ValueError("shows_minimum can't be greater then the highest count of shows per network")
     plot_bar(top_data.set_index('for_plot'), "Gêneros mais populares por plataforma", "Plataforma", "Popularidade", years_interval)
     return
 
 def plot_bar(dataframe : pd.DataFrame, plt_title : str="plot", x_axis : str="x", y_axis : str="y", years : list[int]=[0,9999]) -> None:
     """
+    Auxiliar function for the other three functions. Should not be called individually.
     Plots a bar graph of a dataframe, saving it to output folder.
 
     Parameters
@@ -137,12 +169,14 @@ def plot_bar(dataframe : pd.DataFrame, plt_title : str="plot", x_axis : str="x",
     -----
     The function returns None, but expect to have it plotting a pyplot bar graph with the 
     parameters as title, x and y labels.
+    Note that there aren't Raises because the other functions should handle the Exceptions before 
+    calling this auxiliar function.
 
     """
     
     if years != [0,9999]:
         plt_title = plt_title + ", de " + str(years[0]) + " a " + str(years[1])
-
+    print(plt_title)
     figure = plt.subplots(figsize=(19.2, 10.8))  
     dataframe.plot.bar(title=plt_title, ax=figure[1])
     
@@ -152,9 +186,7 @@ def plot_bar(dataframe : pd.DataFrame, plt_title : str="plot", x_axis : str="x",
 
     
     
-    plt.savefig("./output/graph.png", dpi=100)
+    plt.savefig(f"./output/{plt_title}.png", dpi=100)
     plt.close()
     print("plot saved")
     return
-
-most_frequent_genre(60, 100)

@@ -29,6 +29,13 @@ def filter_second(shows_minimum : int, date_interval : list[int]=[0, 9999]) -> p
     pandas.Dataframe
         The filtered version of the dataset.
 
+    Raises
+    ------
+    TypeError:
+        When shows_minimum isn't instances of int, or date_interval isn't a list of two integers.
+    ValueError:
+        When the first element of date_interval is greater than the second.  
+
     Examples
     --------
     >>> filter_second(0)
@@ -64,7 +71,7 @@ def filter_second(shows_minimum : int, date_interval : list[int]=[0, 9999]) -> p
         [1057 rows x 29 columns]
         
     """
-    if not isinstance(shows_minimum, int) or not isinstance(date_interval[0], int) or len(date_interval) != 2:# or not isinstance(date_interval[1], int):
+    if not isinstance(shows_minimum, int) or not isinstance(date_interval[0], int) or len(date_interval) != 2:
         raise TypeError("check the argument types")
     if not isinstance(date_interval[1], int):
         raise TypeError("check the argument types")
@@ -99,6 +106,11 @@ def filter_third(shows_minimum : int, votes_minimum : int=1) -> pd.DataFrame:
     -------
     pandas.Dataframe
         The filtered version of the dataset.
+
+    Raises
+    ------
+    TypeError:
+        When shows_minimum or votes_minimum aren't instances of int.   
 
     Examples
     --------

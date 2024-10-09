@@ -5,7 +5,7 @@ from src.filter import filter_second, filter_third
 
 class TestFilter(unittest.TestCase):
 
-    def test_normal_nodate_filter_second(self):
+    def test_expected_nodate_filter_second(self):
         try:
             result_df = filter_second(100)
             self.assertIsInstance(result_df, pd.DataFrame)  # check result is a DataFrame
@@ -47,6 +47,10 @@ class TestFilter(unittest.TestCase):
         except Exception as e:
             self.fail(f"filter_second failed to filter the dataset with the exception: {e}")
 
-    def test_lotofshows_filter_second(self):
+    def test_lotofshows_filter_third(self):
         with self.assertWarns(Warning):
-                    filter_third(10000000)
+                    filter_third(10000000000000)
+
+                    
+if __file__ == "__main__":
+    unittest.main()
