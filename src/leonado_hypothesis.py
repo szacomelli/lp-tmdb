@@ -158,6 +158,12 @@ def bins_with_outliers(df: pd.DataFrame, num_bins: int) -> list:
     >>> print(labels)
     ['0-599', '600-1199', '1200-1799', '1800-2399', '2400 or more']
     """
+    if not isinstance(num_bins, int):
+        raise ValueError("The number of bins must be an integer.")
+    
+    if num_bins <= 1:
+        raise ValueError("The number of bins must be greater than 1.")
+    
     if not isinstance(df, pd.DataFrame):
         raise TypeError("Check the types of the passed arguments")
     
@@ -217,7 +223,7 @@ def display_analysis(df: pd.DataFrame) -> None:
     This example creates a fictitious DataFrame with information about 5 TV series. The function then counts how many series 
     exist within each bin and displays these results, also showing the total number of series in the DataFrame at the end.
     >>> df = pd.DataFrame({
-            'name': ['Series A', 'Series B', 'Series C', 'Series D', 'Series E'],
+            'name': ['Serie A', 'Serie B', 'Serie C', 'Serie D', 'Serie E'],
             'number_of_episodes': [50, 100, 200, 250, 300],
             'number_of_seasons': [2, 5, 10, 12, 15],
             'avg_ep_per_season': [25.0, 20.0, 20.0, 20.8, 25.0],
@@ -318,46 +324,51 @@ def plot_charts(df: pd.DataFrame) -> None:
     
     # Bar chart showing the average rating per category (IQR)
     plt.figure(figsize=(12, 6))
+    plt_title = "Average Rating per Category (IQR)"
     mean_per_bin_iqr = df.groupby('category_bin_iqr', observed=False)['vote_average'].mean().reset_index()
     sns.barplot(x='category_bin_iqr', y='vote_average', hue='category_bin_iqr', data=mean_per_bin_iqr, palette='Set2', legend=False)
-    plt.title("Average Rating per Category (IQR)")
+    plt.title(plt_title)
     plt.ylabel("Average Rating (Vote Average)")
     plt.xlabel("Episode Number Category (Bins)")
     plt.ylim(0, 10)  # Setting the y-axis from 0 to 10
     plt.xticks(rotation=45)
-    plt.savefig('rating_category_iqr.png')  # Saving the chart
+    plt.savefig(f"./output/hypothesis_one/{plt_title}.png", dpi=100) # Saving the chart
 
     # Bar chart showing the average rating per category, including outliers
     plt.figure(figsize=(12, 6))
+    plt_title = "Average Rating with Outliers"
     mean_per_bin_outliers = df.groupby('category_bin_outliers', observed=False)['vote_average'].mean().reset_index()
     sns.barplot(x='category_bin_outliers', y='vote_average', hue='category_bin_outliers', data=mean_per_bin_outliers, palette='Set1', legend=False)
-    plt.title("Average Rating with Outliers")
+    plt.title(plt_title)
     plt.ylabel("Average Rating (Vote Average)")
     plt.xlabel("Episode Number Category (Bins)")
     plt.ylim(0, 10)  # Setting the y-axis from 0 to 10
     plt.xticks(rotation=45)
-    plt.savefig('rating_outliers.png')  # Saving the chart
+    plt.savefig(f"./docs/source/images/{plt_title}.png", dpi=100) # Saving the chart
     
     # Distribution chart of ratings (vote_average)
     plt.figure(figsize=(12, 6))
+    plt_title = "Rating Distribution (Vote Average)"
     sns.histplot(df['vote_average'], bins=20, kde=True, color='blue')
-    plt.title("Rating Distribution (Vote Average)")
+    plt.title(plt_title)
     plt.xlabel("Rating (Vote Average)")
     plt.ylabel("Frequency")
-    plt.savefig('rating_distribution.png')  # Saving the chart
+    plt.savefig(f"./docs/source/images/{plt_title}.png", dpi=100) # Saving the chart
+
 
     # Scatter plot with IQR categories on the X-axis and ratings on the Y-axis
     plt.figure(figsize=(12, 6))
+    plt_title = "Rating vs. Average Episodes per Season"
     sns.scatterplot(x='avg_ep_per_season', y='vote_average', data=df, hue='avg_ep_per_season', palette='viridis', legend=False)
-    plt.title("Scatter Plot of Ratings by Average Episodes per Season")
+    plt.title(plt_title)
     plt.ylabel("Rating (Vote Average)")
     plt.xlabel("Average Episodes per Season")
     plt.ylim(0, 10)  # Setting the y-axis from 0 to 10
     plt.xlim(df['avg_ep_per_season'].min(), df['avg_ep_per_season'].max())  # Set the X-axis limits
     plt.xticks(rotation=45)
-    plt.savefig('scatter_avg_episodes_per_season.png')  # Saving the chart
+    plt.savefig(f"./docs/source/images/{plt_title}.png", dpi=100) # Saving the chart
+
     
-    plt.show()
     plt.close()
     
 # Function to run the analysis
