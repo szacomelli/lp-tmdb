@@ -79,6 +79,11 @@ class TestAnalysis(unittest.TestCase):
             'category_bin_iqr': ['20-24', '15-19', '15-19', '15-19', '20-24'],
             'category_bin_outliers': ['20-24', '15-19', '15-19', '15-19', '20-24']
         })
+    def test_analysis(self):
+        try:
+            analysis(self.valid_df)
+        except Exception as e:
+            self.fail(f"Unexpected error: {e}")
 
     def test_display_analysis(self):
         try:
@@ -106,7 +111,7 @@ class TestAnalysis(unittest.TestCase):
         with self.assertRaises(TypeError):
             display_analysis("%&¨%&$%&¨*¨&%$)")
 
-class TestePlot(unittest.TestCase):
+class TestPlot(unittest.TestCase):
     def setUp(self):
          self.valid_df = pd.DataFrame({
             'name': ['Serie A', 'Serie B', 'Serie C', 'Serie D', 'Serie E'],
@@ -124,7 +129,26 @@ class TestePlot(unittest.TestCase):
             plot_charts(self.valid_df)
         except Exception as e:
             self.fail(f"Unexpected error: {e}")
-        
+
+    def test_plot_charts_empty_dataframe(self):
+        empty_df = pd.DataFrame()
+        with self.assertRaises(ValueError):
+            plot_charts(empty_df)
+
+    def test_plot_charts_missing_column(self):
+        df_missing_column = self.valid_df.drop(columns=['avg_ep_per_season'])
+        with self.assertRaises(ValueError):
+            plot_charts(df_missing_column)
+
+    def test_plot_charts_invalid_dataframe_type(self):
+        with self.assertRaises(TypeError):
+            plot_charts("abacate872163872")
+        with self.assertRaises(TypeError):
+            plot_charts(98984732194)
+        with self.assertRaises(TypeError):
+            plot_charts(-5464421)
+        with self.assertRaises(TypeError):
+            plot_charts("%&µµ%&$%&µµ*µµ)")
     
         
 if __name__ == '__main__':

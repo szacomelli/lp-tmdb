@@ -332,7 +332,8 @@ def plot_charts(df: pd.DataFrame) -> None:
     plt.xlabel("Episode Number Category (Bins)")
     plt.ylim(0, 10)  # Setting the y-axis from 0 to 10
     plt.xticks(rotation=45)
-    plt.savefig(f"./output/hypothesis_one/{plt_title}.png", dpi=100) # Saving the chart
+    plt.savefig(f"./docs/source/images/{plt_title}.png", dpi=100) # Saving the chart
+
 
     # Bar chart showing the average rating per category, including outliers
     plt.figure(figsize=(12, 6))
@@ -367,7 +368,6 @@ def plot_charts(df: pd.DataFrame) -> None:
     plt.xlim(df['avg_ep_per_season'].min(), df['avg_ep_per_season'].max())  # Set the X-axis limits
     plt.xticks(rotation=45)
     plt.savefig(f"./docs/source/images/{plt_title}.png", dpi=100) # Saving the chart
-
     
     plt.close()
     
