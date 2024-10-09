@@ -19,6 +19,13 @@ def most_frequent_genre(top_n : int, shows_minimum : int=0, years_interval : lis
     years_interval : list[int], default [0,9999]
         Plots just the series aired between the first and second element (in years) of the list 
 
+    Raises
+    ------
+    TypeError:
+        When top_n and shows_minimum aren't instances of int, or years_interval isn't a list of two integers.
+    ValueError:
+        When shows_minimum is greater then the highest value of series per network.  
+    
     Examples
     -------
     >>> most_frequent_genre(60)
@@ -61,6 +68,13 @@ def most_voted_genre(top_n : int, shows_minimum : int=0, years_interval : list[i
     years_interval : list[int], default [0,9999]
         Plots just the series aired between the first and second element (in years) of the list 
 
+    Raises
+    ------
+    TypeError:
+        When top_n and shows_minimum aren't instances of int, or years_interval isn't a list of two integers.
+    ValueError:
+        When shows_minimum is greater then the highest value of series per network.  
+        
     Examples
     -------
     >>> most_frequent_genre(60)
@@ -105,6 +119,13 @@ def most_popular_genre(top_n : int, shows_minimum : int=0, years_interval : list
         Plots just networks that have at least this number os shows.
     years_interval : list[int], default [0,9999]
         Plots just the series aired between the first and second element (in years) of the list. 
+
+    Raises
+    ------
+    TypeError:
+        When top_n and shows_minimum aren't instances of int, or years_interval isn't a list of two integers.
+    ValueError:
+        When shows_minimum is greater then the highest value of series per network.      
 
     Examples
     -------
