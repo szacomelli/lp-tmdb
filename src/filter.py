@@ -10,21 +10,131 @@ def filter_first(votes_minimum : int) -> pd.DataFrame:
     file_votes = raw_file.loc[data]
     return (file_votes[file_votes['vote_count'] > votes_minimum]).copy()
 
-def filter_second(series_minimum : int, date_max : list[int]=[0, 9999]) -> pd.DataFrame:
-    d_file = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'genres', 'networks', 'first_air_date']].replace(to_replace=0, value=np.nan).dropna()
-    data_index = d_file[[int(item[0]) >= date_max[0] and int(item[0]) <= date_max[1] for item in d_file['first_air_date'].str.split('-')[:].tolist()]].index
-    flt_file = (raw_file.loc[data_index]).copy()
-    flt_file['genres'] = flt_file['genres'].str.split(", ")
-    flt_file['networks'] = flt_file['networks'].str.split(", ")
-    flt_file = flt_file.explode('genres').explode('networks')
-    spl_file = flt_file[['networks', 'genres']].copy()
-    net_list = (spl_file.groupby('networks').count() > series_minimum).replace(to_replace=False, value=np.nan).dropna().reset_index()['networks'].tolist()
-    flt_file = flt_file[flt_file['networks'].isin(net_list)]
-    return flt_file.copy()
+def filter_second(shows_minimum : int, date_interval : list[int]=[0, 9999]) -> pd.DataFrame:
+    """
+    Filters the TMDB TV Shows database presented in the data folder, accordingly with the needs 
+    of the 2nd hypotheses (aka. hipotheses_silvio).
 
-def filter_third(votes_minimum : int) -> pd.DataFrame:
-    data = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'networks']].replace(to_replace=0, value=np.nan).dropna().index
-    file_votes = raw_file.loc[data]
-    return (file_votes[file_votes['vote_count'] > votes_minimum]).copy()
+    Parameters
+    ----------
+    series_minimum : int
+        Minimum number of shows that every streaming networks needs to have in order to continue 
+        in the dataset.
+    date_interval : list[int], default [0, 9999]
+        A list with two elements, which represents the interval of time (in years) in which the 
+        shows needs to have been aired in order to be kept in the dataset.
+
+    Returns
+    -------
+    pandas.Dataframe
+        The filtered version of the dataset.
+
+    Examples
+    --------
+    >>> filter_second(0)
+                   id  ... episode_run_time
+        0        1399  ...                0
+        0        1399  ...                0
+        0        1399  ...                0
+        1       71446  ...               70
+        1       71446  ...               70
+        ...       ...  ...              ...
+        57497  238881  ...                0
+        57497  238881  ...                0
+        57498  238853  ...                0
+        57498  238853  ...                0
+        57500   29024  ...               60
+
+        [90676 rows x 29 columns]
+
+    >>> filter_second(100, [2023, 2024])
+                   id  ... episode_run_time
+        642    111110  ...                0
+        642    111110  ...                0
+        953    129552  ...                0
+        953    129552  ...                0
+        953    129552  ...                0
+        ...       ...  ...              ...
+        57489  241206  ...                0
+        57489  241206  ...                0
+        57489  241206  ...                0
+        57497  238881  ...                0
+        57497  238881  ...                0
+
+        [1057 rows x 29 columns]
+        
+    """
+    raw_data = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'genres', 'networks', 'first_air_date']].replace(to_replace=0, value=np.nan).dropna()
+    data_index = raw_data[[int(item[0]) >= date_interval[0] and int(item[0]) <= date_interval[1] for item in raw_data['first_air_date'].str.split('-')[:].tolist()]].index
+    flt_data = (raw_file.loc[data_index]).copy()
+    flt_data['genres'] = flt_data['genres'].str.split(", ")
+    flt_data['networks'] = flt_data['networks'].str.split(", ")
+    flt_data = flt_data.explode('genres').explode('networks')
+    spl_data = flt_data[['networks', 'genres']].copy()
+    net_list = (spl_data.groupby('networks').count() > shows_minimum).replace(to_replace=False, value=np.nan).dropna().reset_index()['networks'].tolist()
+    flt_data = flt_data[flt_data['networks'].isin(net_list)]
+    return flt_data.copy()
+
+def filter_third(shows_minimum : int, votes_minimum : int=1) -> pd.DataFrame:
+    """
+    Filters the TMDB TV Shows database presented in the data folder, accordingly with the needs 
+    of the 3rd hypotheses (aka. hipotheses_dilmar).
+
+    Parameters
+    ----------
+    series_minimum : int
+        Minimum number of shows that every streaming networks needs to have in order to continue 
+        in the dataset.
+    votes_minimum : int, default 1
+        Minimum number of votes a series needs to have in order to continue in the dataset.
+
+    Returns
+    -------
+    pandas.Dataframe
+        The filtered version of the dataset.
+
+    Examples
+    --------
+    >>> filter_third(1)
+               id  ... episode_run_time
+    0        1399  ...                0
+    2       66732  ...                0
+    3        1402  ...               42
+    4       63174  ...               45
+    5       69050  ...               45
+    ...       ...  ...              ...
+    57493  238871  ...                0
+    57495  237677  ...                0
+    57497  238881  ...                0
+    57498  238853  ...                0
+    57500   29024  ...               60
+
+    [43481 rows x 29 columns]
+
+
+    >>> filter_third(100, 100)
+              id                 name  ...      production_countries  episode_run_time
+    2      66732      Stranger Things  ...  United States of America                 0
+    6      93405           Squid Game  ...               South Korea                 0
+    8      71712      The Good Doctor  ...  United States of America                43
+    11      1418  The Big Bang Theory  ...  United States of America                22
+    13      1416       Grey's Anatomy  ...  United States of America                43
+    ...      ...                  ...  ...                       ...               ...
+    2997   89785      Family Business  ...                    France                27
+    2999  216811             Triptych  ...                    Mexico                 0
+    3012    3162         Hart to Hart  ...                       NaN                60
+    3015   67118           Conviction  ...  United States of America                42
+    3017   81946     The Enemy Within  ...  United States of America                43
+
+    [744 rows x 29 columns]
+
+        
+    """
+    data_idx = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'networks']].replace(to_replace=0, value=np.nan).dropna().index
+    raw_data = raw_file.loc[data_idx]
+    flt_data = (raw_data[raw_data['vote_count'] >= votes_minimum]).copy()
+    sub_data = flt_data[['networks', 'genres']].copy()
+    net_list = (sub_data.groupby('networks').count() > shows_minimum).replace(to_replace=False, value=np.nan).dropna().reset_index()['networks'].tolist()
+    return flt_data[flt_data['networks'].isin(net_list)].copy()
 
 
