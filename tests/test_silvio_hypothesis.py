@@ -72,3 +72,6 @@ class TestSilvio_Hypothesis(unittest.TestCase):
     def test_invalid_arguments_most_voted_genre(self):
         with self.assertRaises(TypeError):
             most_voted_genre("kajhsdasd", "leão")
+
+if __file__ == "__main__":
+    unittest.main()

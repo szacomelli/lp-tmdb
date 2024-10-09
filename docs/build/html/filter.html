@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>filter module &#8212; lp-tmdb  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=c058f7c8" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="hipotese_dilmar module" href="hipotese_dilmar.html" />
+    <link rel="prev" title="src" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-filter">
+<span id="filter-module"></span><h1>filter module<a class="headerlink" href="#module-filter" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="filter.filter_first">
+<span class="sig-prename descclassname"><span class="pre">filter.</span></span><span class="sig-name descname"><span class="pre">filter_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">votes_minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#filter.filter_first" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="filter.filter_second">
+<span class="sig-prename descclassname"><span class="pre">filter.</span></span><span class="sig-name descname"><span class="pre">filter_second</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shows_minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[0,</span> <span class="pre">9999]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#filter.filter_second" title="Link to this definition">¶</a></dt>
+<dd><p>Filters the TMDB TV Shows database presented in the data folder, accordingly with the needs
+of the 2nd hypotheses (aka. hipotheses_silvio).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>series_minimum</strong> (<em>int</em>) – Minimum number of shows that every streaming networks needs to have in order to continue
+in the dataset.</p></li>
+<li><p><strong>date_interval</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default</em><em> [</em><em>0</em><em>, </em><em>9999</em><em>]</em>) – A list with two elements, which represents the interval of time (in years) in which the
+shows needs to have been aired in order to be kept in the dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The filtered version of the dataset.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.Dataframe</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError:</strong> – When shows_minimum isn’t instances of int, or date_interval isn’t a list of two integers.</p></li>
+<li><p><strong>ValueError:</strong> – When the first element of date_interval is greater than the second.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">filter_second</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">               id  ... episode_run_time</span>
+<span class="go">    0        1399  ...                0</span>
+<span class="go">    0        1399  ...                0</span>
+<span class="go">    0        1399  ...                0</span>
+<span class="go">    1       71446  ...               70</span>
+<span class="go">    1       71446  ...               70</span>
+<span class="go">    ...       ...  ...              ...</span>
+<span class="go">    57497  238881  ...                0</span>
+<span class="go">    57497  238881  ...                0</span>
+<span class="go">    57498  238853  ...                0</span>
+<span class="go">    57498  238853  ...                0</span>
+<span class="go">    57500   29024  ...               60</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>[90676 rows x 29 columns]</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">filter_second</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="p">[</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">2024</span><span class="p">])</span>
+<span class="go">               id  ... episode_run_time</span>
+<span class="go">    642    111110  ...                0</span>
+<span class="go">    642    111110  ...                0</span>
+<span class="go">    953    129552  ...                0</span>
+<span class="go">    953    129552  ...                0</span>
+<span class="go">    953    129552  ...                0</span>
+<span class="go">    ...       ...  ...              ...</span>
+<span class="go">    57489  241206  ...                0</span>
+<span class="go">    57489  241206  ...                0</span>
+<span class="go">    57489  241206  ...                0</span>
+<span class="go">    57497  238881  ...                0</span>
+<span class="go">    57497  238881  ...                0</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>[1057 rows x 29 columns]</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="filter.filter_third">
+<span class="sig-prename descclassname"><span class="pre">filter.</span></span><span class="sig-name descname"><span class="pre">filter_third</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shows_minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">votes_minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#filter.filter_third" title="Link to this definition">¶</a></dt>
+<dd><p>Filters the TMDB TV Shows database presented in the data folder, accordingly with the needs
+of the 3rd hypotheses (aka. hipotheses_dilmar).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>series_minimum</strong> (<em>int</em>) – Minimum number of shows that every streaming networks needs to have in order to continue
+in the dataset.</p></li>
+<li><p><strong>votes_minimum</strong> (<em>int</em><em>, </em><em>default 1</em>) – Minimum number of votes a series needs to have in order to continue in the dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The filtered version of the dataset.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.Dataframe</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError:</strong> – When shows_minimum or votes_minimum aren’t instances of int.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">filter_third</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">           id  ... episode_run_time</span>
+<span class="go">0        1399  ...                0</span>
+<span class="go">2       66732  ...                0</span>
+<span class="go">3        1402  ...               42</span>
+<span class="go">4       63174  ...               45</span>
+<span class="go">5       69050  ...               45</span>
+<span class="go">...       ...  ...              ...</span>
+<span class="go">57493  238871  ...                0</span>
+<span class="go">57495  237677  ...                0</span>
+<span class="go">57497  238881  ...                0</span>
+<span class="go">57498  238853  ...                0</span>
+<span class="go">57500   29024  ...               60</span>
+</pre></div>
+</div>
+<p>[43481 rows x 29 columns]</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">filter_third</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">          id                 name  ...      production_countries  episode_run_time</span>
+<span class="go">2      66732      Stranger Things  ...  United States of America                 0</span>
+<span class="go">6      93405           Squid Game  ...               South Korea                 0</span>
+<span class="go">8      71712      The Good Doctor  ...  United States of America                43</span>
+<span class="go">11      1418  The Big Bang Theory  ...  United States of America                22</span>
+<span class="go">13      1416       Grey&#39;s Anatomy  ...  United States of America                43</span>
+<span class="go">...      ...                  ...  ...                       ...               ...</span>
+<span class="go">2997   89785      Family Business  ...                    France                27</span>
+<span class="go">2999  216811             Triptych  ...                    Mexico                 0</span>
+<span class="go">3012    3162         Hart to Hart  ...                       NaN                60</span>
+<span class="go">3015   67118           Conviction  ...  United States of America                42</span>
+<span class="go">3017   81946     The Enemy Within  ...  United States of America                43</span>
+</pre></div>
+</div>
+<p>[744 rows x 29 columns]</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">lp-tmdb</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">filter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hipotese_dilmar.html">hipotese_dilmar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hipotese_leonardo.html">hipotese_leonardo module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="silvio_hypothesis.html">silvio_hypothesis module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">src</a></li>
+      <li>Next: <a href="hipotese_dilmar.html" title="next chapter">hipotese_dilmar module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, Sílvio Zacomelli, Leonardo Verissimo, Dilmar Aparecido.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.0.2</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/filter.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

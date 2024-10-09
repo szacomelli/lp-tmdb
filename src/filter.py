@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
+import os
+import sys
 
 #global variables
-file_path = "data/TMDB_tv_dataset_v3.csv"
+file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data/TMDB_tv_dataset_v3.csv'))
 raw_file = pd.read_csv(file_path, delimiter=",")
 
 def filter_first(votes_minimum: int = 0) -> pd.DataFrame:
