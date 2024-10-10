@@ -64,7 +64,7 @@ def filter_first(votes_minimum: int = 0) -> pd.DataFrame:
     raw_file.loc[(raw_file['number_of_episodes'] > 0) & (raw_file['number_of_seasons'] == 0), 'number_of_seasons'] = 1
 
 
-    # Filter out shows with no votes and no episodes
+    # Filter series that do not have the minimum number of required evaluations
     df_filtered = raw_file[(raw_file['vote_count'] >= votes_minimum) & (raw_file['number_of_episodes'] > 0)].copy()
     
     df_index = df_filtered[['name', 'vote_count', 'vote_average', 'number_of_episodes']].replace(to_replace=0, value=np.nan).dropna().index

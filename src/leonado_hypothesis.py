@@ -179,6 +179,9 @@ def bins_with_outliers(df: pd.DataFrame, num_bins: int) -> list:
     if not pd.api.types.is_numeric_dtype(df['avg_ep_per_season']):
         raise ValueError("Column 'avg_ep_per_season' must contain only numeric values.")
     
+    if num_bins > max(df['avg_ep_per_season']):
+        raise ValueError("The number of bins is greater than the number of values in the 'avg_ep_per_season' column.")
+    
     avg_ep_per_season = df['avg_ep_per_season']
     num_bins = num_bins + 1  # Add one more bin to account for the outliers
     
@@ -266,9 +269,7 @@ def display_analysis(df: pd.DataFrame) -> None:
 
     shows_per_bin_outliers = df_filtered_final['category_bin_outliers'].value_counts().sort_index()
     
-    print(shows_per_bin_iqr)
-    print(shows_per_bin_outliers)
-    print(f"Number of shows in the DataFrame: {len(df_filtered_final)}")
+   
 
 # Function to plot bar charts with the average ratings per bin and distribution
 def plot_charts(df: pd.DataFrame) -> None:
@@ -323,18 +324,18 @@ def plot_charts(df: pd.DataFrame) -> None:
     plt.figure(figsize=(12, 6))
     plt_title = "Average Rating per Category (IQR)"
     mean_per_bin_iqr = df.groupby('category_bin_iqr', observed=False)['vote_average'].mean().reset_index()
+    
     sns.barplot(x='category_bin_iqr', y='vote_average', hue='category_bin_iqr', data=mean_per_bin_iqr, palette='Set2', legend=False)
     plt.title(plt_title)
     plt.ylabel("Average Rating (Vote Average)")
     plt.xlabel("Episode Number Category (Bins)")
     plt.ylim(0, 10)  # Setting the y-axis from 0 to 10
     plt.xticks(rotation=45)
-    plt.savefig(f"./docs/source/images/{plt_title}.png", dpi=100) # Saving the chart
-
+    plt.savefig(f"./output/{plt_title}.png", dpi=100)  # Saving the chart
 
     # Bar chart showing the average rating per category, including outliers
     plt.figure(figsize=(12, 6))
-    plt_title = "Average Rating with Outliers"
+    plt_title = "Average Rating with outliers"
     mean_per_bin_outliers = df.groupby('category_bin_outliers', observed=False)['vote_average'].mean().reset_index()
     sns.barplot(x='category_bin_outliers', y='vote_average', hue='category_bin_outliers', data=mean_per_bin_outliers, palette='Set1', legend=False)
     plt.title(plt_title)
@@ -342,7 +343,7 @@ def plot_charts(df: pd.DataFrame) -> None:
     plt.xlabel("Episode Number Category (Bins)")
     plt.ylim(0, 10)  # Setting the y-axis from 0 to 10
     plt.xticks(rotation=45)
-    plt.savefig(f"./docs/source/images/{plt_title}.png", dpi=100) # Saving the chart
+    plt.savefig(f"./output/{plt_title}.png", dpi=100)  # Saving the chart
     
     # Distribution chart of ratings (vote_average)
     plt.figure(figsize=(12, 6))
@@ -351,12 +352,11 @@ def plot_charts(df: pd.DataFrame) -> None:
     plt.title(plt_title)
     plt.xlabel("Rating (Vote Average)")
     plt.ylabel("Frequency")
-    plt.savefig(f"./docs/source/images/{plt_title}.png", dpi=100) # Saving the chart
-
+    plt.savefig(f"./output/{plt_title}.png", dpi=100)  # Saving the chart
 
     # Scatter plot with IQR categories on the X-axis and ratings on the Y-axis
     plt.figure(figsize=(12, 6))
-    plt_title = "Rating vs. Average Episodes per Season"
+    plt_title = "Scatter Plot of Ratings by Average Episodes per Season"
     sns.scatterplot(x='avg_ep_per_season', y='vote_average', data=df, hue='avg_ep_per_season', palette='viridis', legend=False)
     plt.title(plt_title)
     plt.ylabel("Rating (Vote Average)")
@@ -364,12 +364,13 @@ def plot_charts(df: pd.DataFrame) -> None:
     plt.ylim(0, 10)  # Setting the y-axis from 0 to 10
     plt.xlim(df['avg_ep_per_season'].min(), df['avg_ep_per_season'].max())  # Set the X-axis limits
     plt.xticks(rotation=45)
-    plt.savefig(f"./docs/source/images/{plt_title}.png", dpi=100) # Saving the chart
+    plt.savefig(f"./output/{plt_title}.png", dpi=100)  # Saving the chart
     
     plt.close()
     
+    
 # Function to run the analysis
-def analysis(num_bins: int = 5) -> None:
+def analysis(num_bins: int = 5, votes_minimum: int = 0) -> None:
     """ 
     Runs the analysis.
 
@@ -406,7 +407,7 @@ def analysis(num_bins: int = 5) -> None:
     if num_bins < 1:
         raise ValueError("The number of bins must be greater than 1.")
     
-    df_filtered = filter_first()
+    df_filtered = filter_first(votes_minimum)
 
     if df_filtered.empty:
         raise ValueError("The filtered DataFrame is empty.")
@@ -426,7 +427,7 @@ def analysis(num_bins: int = 5) -> None:
     
     # Create the category column with pd.cut
     df_filtered['category_bin_iqr'] = pd.cut(df_filtered['avg_ep_per_season'], bins=limit_bins_IQR, labels=labels_bins_IQR)
-    df_filtered['category_bin_outliers'] = pd.cut(df_filtered['avg_ep_per_season'], bins=limit_outliers, labels=labels_outliers)
-    
+    df_filtered['category_bin_outliers'] = pd.cut(df_filtered['avg_ep_per_season'], bins=limit_outliers, labels=labels_outliers, duplicates='drop')
+
     display_analysis(df_filtered)
     plot_charts(df_filtered)

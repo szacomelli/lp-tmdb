@@ -33,8 +33,7 @@ class TestBins(unittest.TestCase):
         with self.assertRaises(TypeError):
             bins_IQR(-5464421)
         with self.assertRaises(TypeError):
-            bins_IQR("%&¨%&$%&¨*¨&%$)")
-            
+            bins_IQR("%&¨%&$%&¨*¨&%$)")   
 
     def test_bins_IQR_missing_column(self):
         df_missing_col = self.valid_df.drop(columns=['avg_ep_per_season'])

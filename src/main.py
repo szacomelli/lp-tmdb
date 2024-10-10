@@ -1,6 +1,10 @@
-import hipotese_silvio as sv
-import hipotese_leonardo as ln
+import silvio_hypothesis as sv
+import leonado_hypothesis as ln
 import hipotese_dilmar as dm
+
+
+# First Hypothesis
+ln.analysis(20, 0)
 
 
 sv.most_frequent_genre(10, 100)
