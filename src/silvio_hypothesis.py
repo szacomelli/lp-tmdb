@@ -50,7 +50,7 @@ def most_frequent_genre(top_n : int, shows_minimum : int=0, years_interval : lis
     top_data = raw_data.loc[data_idx].copy()
 
     #creating the output for the plot
-    top_data = raw_data.sort_values('count', ascending=False).head(top_n)
+    top_data = top_data.sort_values('count', ascending=False).head(top_n)
     top_data['for_plot'] = top_data['networks'] + ": (" + top_data['genres'] + ")"
     
     if top_data.empty:
