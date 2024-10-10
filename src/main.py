@@ -3,5 +3,5 @@ import leonado_hypothesis as ln
 import dilmar_hypothesis as dm
 import filter
 
-dm.dilmar_hypotesis(15, 150)
+dm.dilmar_hypotesis(10, 100)
 

@@ -34,6 +34,7 @@ def dilmar_hypotesis(shows_minimum : int, votes_minimum : int):
         df = filter_third(shows_minimum,votes_minimum)
         df = df[['name', 'vote_count', 'vote_average', 'popularity', 'networks']]
         # Receives clean from the filter_third function and then saves only the useful columns.
+        print(df)
 
         df['networks'] = df['networks'].str.split(',')
         df = df.explode('networks')
@@ -68,5 +69,3 @@ def dilmar_hypotesis(shows_minimum : int, votes_minimum : int):
         # Make a graph for each interval
     except OverflowError:
         print("Error: the filter is removing all the lines. Change the parameters.")
-
-
