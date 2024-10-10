@@ -21,13 +21,20 @@ of 2,100 lines.
 The graphs obtained
 -------------------
 
-graph0
-graph1
-graph2
-graph3
-graph4
-graph5
-graph6
+.. image:: ./output/graph0
+
+.. image:: ./output/graph1
+
+.. image:: ./output/graph2
+
+.. image:: ./output/graph3
+
+.. image:: ./output/graph4
+
+.. image:: ./output/graph5
+
+.. image:: ./output/graph6
+
 
 Results from data
 -----------------
