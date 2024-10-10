@@ -52,7 +52,7 @@ def most_frequent_genre(top_n : int, shows_minimum : int=0, years_interval : lis
     
     if top_data.empty:
         raise ValueError("shows_minimum can't be greater then the highest count of shows per network")
-    plot_bar(top_data.set_index('for_plot'), "Gêneros mais frequentes por plataforma", "Plataforma", "Frequência média", years_interval)
+    plot_bar(top_data.set_index('for_plot'), "Most frequent genres by network", "Network and genre", "Average frequency", years_interval)
     return
 
 def most_voted_genre(top_n : int, shows_minimum : int=0, years_interval : list[int]=[0,9999]) -> None:
@@ -104,7 +104,7 @@ def most_voted_genre(top_n : int, shows_minimum : int=0, years_interval : list[i
 
     if top_data.empty:
         raise ValueError("shows_minimum can't be greater then the highest count of shows per network")
-    plot_bar(top_data.set_index('for_plot'), "Gêneros mais votados por plataforma", "Plataforma", "Média de votos", years_interval)
+    plot_bar(top_data.set_index('for_plot'), "Most voted genres by network", "Networks and genres", "Vote average", years_interval)
     return
 
 def most_popular_genre(top_n : int, shows_minimum : int=0, years_interval : list[int]=[0,9999]) -> None:
@@ -157,7 +157,7 @@ def most_popular_genre(top_n : int, shows_minimum : int=0, years_interval : list
 
     if top_data.empty:
         raise ValueError("shows_minimum can't be greater then the highest count of shows per network")
-    plot_bar(top_data.set_index('for_plot'), "Gêneros mais populares por plataforma", "Plataforma", "Popularidade", years_interval)
+    plot_bar(top_data.set_index('for_plot'), "Most popular genres by network", "Networks and genres", "Popularity", years_interval)
     return
 
 def plot_bar(dataframe : pd.DataFrame, plt_title : str="plot", x_axis : str="x", y_axis : str="y", years : list[int]=[0,9999]) -> None:
@@ -196,7 +196,7 @@ def plot_bar(dataframe : pd.DataFrame, plt_title : str="plot", x_axis : str="x",
     """
     
     if years != [0,9999]:
-        plt_title = plt_title + ", de " + str(years[0]) + " a " + str(years[1])
+        plt_title = plt_title + ", from " + str(years[0]) + " to " + str(years[1])
     print(plt_title)
     figure = plt.subplots(figsize=(19.2, 10.8))  
     dataframe.plot.bar(title=plt_title, ax=figure[1])

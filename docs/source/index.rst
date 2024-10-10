@@ -14,7 +14,7 @@ Welcome to the lp-tmdb documentation! Below, you can access all our content, whi
 |
 
 Analysis:
-========
+=========
 .. toctree::
    :maxdepth: 2
 
