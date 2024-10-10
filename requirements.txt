@@ -1,2 +1,5 @@
 sphinx
 pandas
+matplotlib
+numpy
+seaborn
