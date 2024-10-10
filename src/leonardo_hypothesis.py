@@ -228,7 +228,7 @@ def display_analysis(df: pd.DataFrame) -> None:
     -------
     This example creates a fictitious DataFrame with information about 5 TV series. The function then counts how many series 
     exist within each bin and displays these results, also showing the total number of series in the DataFrame at the end.
-    
+
     >>> df = pd.DataFrame({
             'name': ['Serie A', 'Serie B', 'Serie C', 'Serie D', 'Serie E'],
             'number_of_episodes': [50, 100, 200, 250, 300],
@@ -301,6 +301,7 @@ def plot_charts(df: pd.DataFrame) -> None:
     -------
     This example creates a dummy DataFrame with information about 5 TV series. 
     The plot_charts(df) function then generates the requested charts.
+    
     >>> df = pd.DataFrame({
             'name': ['Serie A', 'Serie B', 'Serie C', 'Serie D', 'Serie E'],
             'number_of_episodes': [50, 100, 200, 250, 300],
@@ -311,6 +312,7 @@ def plot_charts(df: pd.DataFrame) -> None:
             'category_bin_iqr': ['15-19', '20-24', '25 or more', '20-24', '25 or more'],
             'category_bin_outliers': ['15-19', '20-24', '25 or more', '20-24', '25 or more']
         })
+
     >>> plot_charts(df)
     """
     if not isinstance(df, pd.DataFrame):

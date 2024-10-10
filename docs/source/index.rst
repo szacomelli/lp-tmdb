@@ -23,6 +23,16 @@ Analyses:
 
 |
 
+Trivia:
+=========
+.. toctree::
+   :maxdepth: 2
+
+   challenges
+   work_division
+   
+|
+
 Contents:
 =========
 .. toctree::
