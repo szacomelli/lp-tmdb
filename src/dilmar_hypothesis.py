@@ -4,7 +4,7 @@ import seaborn as sns # type: ignore
 import pandas as pd # type: ignore
 import numpy as np # type: ignore
 
-def dilmar_hypotesis(shows_minimum : int, votes_minimum : int):
+def dilmar_hypothesis(shows_minimum : int, votes_minimum : int):
     """
     Create graphs for many intervals of the column "vote_average", the x-axis is "networks" and the y-axis is "popularity"
 
