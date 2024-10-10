@@ -50,7 +50,7 @@ def most_frequent_genre(top_n : int, shows_minimum : int=0, years_interval : lis
     top_data = raw_data.loc[data_idx].copy()
 
     #creating the output for the plot
-    top_data = raw_data.sort_values('count', ascending=False).head(top_n)
+    top_data = top_data.sort_values('count', ascending=False).head(top_n)
     top_data['for_plot'] = top_data['networks'] + ": (" + top_data['genres'] + ")"
     
     if top_data.empty:
@@ -209,11 +209,13 @@ def plot_bar(dataframe : pd.DataFrame, plt_title : str="plot", x_axis : str="x",
     
     #changing resolution
     figure = plt.subplots(figsize=(19.2, 10.8))  
-    dataframe.plot.bar(title=plt_title, ax=figure[1])
+    dataframe.plot.bar(title=plt_title, ax=figure[1], fontsize=20)
+    plt.rcParams.update({'font.size': 20})
     
     figure[1].set_xlabel(x_axis)
     figure[1].set_ylabel(y_axis)
     plt.subplots_adjust(bottom=0.5)
+    plt.rcParams.update({'font.size': 20})
     
     plt.savefig(f"./output/{plt_title}.png", dpi=100)
     plt.close()
