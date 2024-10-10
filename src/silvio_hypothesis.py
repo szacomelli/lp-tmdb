@@ -19,6 +19,13 @@ def most_frequent_genre(top_n : int, shows_minimum : int=0, years_interval : lis
     years_interval : list[int], default [0,9999]
         Plots just the series aired between the first and second element (in years) of the list 
 
+    Raises
+    ------
+    TypeError:
+        When top_n and shows_minimum aren't instances of int, or years_interval isn't a list of two integers.
+    ValueError:
+        When shows_minimum is greater then the highest value of series per network.  
+    
     Examples
     -------
     >>> most_frequent_genre(60)
@@ -37,15 +44,18 @@ def most_frequent_genre(top_n : int, shows_minimum : int=0, years_interval : lis
     if years_interval[0] > years_interval[1]:
         raise ValueError("the first element of years_interval must be less or equal the second")
     
+    #counting frequency of shows per network
     raw_data = filter_second(shows_minimum, years_interval).groupby(['genres', 'networks'])['networks'].value_counts().reset_index()
     data_idx = raw_data.groupby('networks')['count'].idxmax()
     top_data = raw_data.loc[data_idx].copy()
-    top_data = raw_data.sort_values('count', ascending=False).head(top_n)
+
+    #creating the output for the plot
+    top_data = top_data.sort_values('count', ascending=False).head(top_n)
     top_data['for_plot'] = top_data['networks'] + ": (" + top_data['genres'] + ")"
     
     if top_data.empty:
         raise ValueError("shows_minimum can't be greater then the highest count of shows per network")
-    plot_bar(top_data.set_index('for_plot'), "Gêneros mais frequentes por plataforma", "Plataforma", "Frequência média", years_interval)
+    plot_bar(top_data.set_index('for_plot'), "Most frequent genres by network", "Network and genre", "Average frequency", years_interval)
     return
 
 def most_voted_genre(top_n : int, shows_minimum : int=0, years_interval : list[int]=[0,9999]) -> None:
@@ -61,6 +71,13 @@ def most_voted_genre(top_n : int, shows_minimum : int=0, years_interval : list[i
     years_interval : list[int], default [0,9999]
         Plots just the series aired between the first and second element (in years) of the list 
 
+    Raises
+    ------
+    TypeError:
+        When top_n and shows_minimum aren't instances of int, or years_interval isn't a list of two integers.
+    ValueError:
+        When shows_minimum is greater then the highest value of series per network.  
+        
     Examples
     -------
     >>> most_frequent_genre(60)
@@ -80,17 +97,20 @@ def most_voted_genre(top_n : int, shows_minimum : int=0, years_interval : list[i
         raise ValueError("the first element of years_interval must be less or equal the second")
     
     raw_data = filter_second(shows_minimum, years_interval)
+    #creating a column that'll be used to create the final vote average (the final average is calculated
+    # by the sum of these averages divided by the sum ov vote_count, grouping by "series by networks")
     raw_data['average'] = raw_data['vote_count']*raw_data['vote_average']
     raw_data = raw_data.groupby(['genres', 'networks']).sum(['average', 'vote_count']).reset_index()[['networks', 'genres', 'average', 'vote_count']]
     raw_data['final_average'] = raw_data['average'] / raw_data['vote_count']
     data_idx = raw_data.groupby('networks')['final_average'].idxmax()
     top_data = raw_data.loc[data_idx].copy()
+    #preparing the data to be plotted
     top_data['for_plot'] = top_data['networks'] + ": (" + top_data['genres'] + ")"
     top_data = top_data[['for_plot', 'final_average']].sort_values('final_average', ascending=False).head(top_n)
 
     if top_data.empty:
         raise ValueError("shows_minimum can't be greater then the highest count of shows per network")
-    plot_bar(top_data.set_index('for_plot'), "Gêneros mais votados por plataforma", "Plataforma", "Média de votos", years_interval)
+    plot_bar(top_data.set_index('for_plot'), "Most voted genres by network", "Networks and genres", "Vote average", years_interval)
     return
 
 def most_popular_genre(top_n : int, shows_minimum : int=0, years_interval : list[int]=[0,9999]) -> None:
@@ -105,6 +125,13 @@ def most_popular_genre(top_n : int, shows_minimum : int=0, years_interval : list
         Plots just networks that have at least this number os shows.
     years_interval : list[int], default [0,9999]
         Plots just the series aired between the first and second element (in years) of the list. 
+
+    Raises
+    ------
+    TypeError:
+        When top_n and shows_minimum aren't instances of int, or years_interval isn't a list of two integers.
+    ValueError:
+        When shows_minimum is greater then the highest value of series per network.      
 
     Examples
     -------
@@ -127,16 +154,18 @@ def most_popular_genre(top_n : int, shows_minimum : int=0, years_interval : list
     if years_interval[0] > years_interval[1]:
         raise ValueError("the first element of years_interval must be less or equal the second")
     
+    #taking the average popularity by "genres by network" and using it's log instead the real value for plot (a way to normalize the data)
     raw_data = filter_second(shows_minimum, years_interval).groupby(['genres', 'networks']).mean('popularity').reset_index()[['networks', 'genres', 'popularity']]
     raw_data['popularity_log'] = np.log(raw_data['popularity'])
     data_idx = raw_data.groupby('networks')['popularity_log'].idxmax()
+    #creating the data to plot
     top_data = raw_data.loc[data_idx].copy()
     top_data['for_plot'] = top_data['networks'] + ": (" + top_data['genres'] + ")"
     top_data = top_data[['for_plot', 'popularity_log']].sort_values('popularity_log', ascending=False).head(top_n)
 
     if top_data.empty:
         raise ValueError("shows_minimum can't be greater then the highest count of shows per network")
-    plot_bar(top_data.set_index('for_plot'), "Gêneros mais populares por plataforma", "Plataforma", "Popularidade", years_interval)
+    plot_bar(top_data.set_index('for_plot'), "Most popular genres by network", "Networks and genres", "Popularity", years_interval)
     return
 
 def plot_bar(dataframe : pd.DataFrame, plt_title : str="plot", x_axis : str="x", y_axis : str="y", years : list[int]=[0,9999]) -> None:
@@ -175,16 +204,18 @@ def plot_bar(dataframe : pd.DataFrame, plt_title : str="plot", x_axis : str="x",
     """
     
     if years != [0,9999]:
-        plt_title = plt_title + ", de " + str(years[0]) + " a " + str(years[1])
+        plt_title = plt_title + ", from " + str(years[0]) + " to " + str(years[1])
     print(plt_title)
+    
+    #changing resolution
     figure = plt.subplots(figsize=(19.2, 10.8))  
-    dataframe.plot.bar(title=plt_title, ax=figure[1])
+    dataframe.plot.bar(title=plt_title, ax=figure[1], fontsize=20)
+    plt.rcParams.update({'font.size': 20})
     
     figure[1].set_xlabel(x_axis)
     figure[1].set_ylabel(y_axis)
     plt.subplots_adjust(bottom=0.5)
-
-    
+    plt.rcParams.update({'font.size': 20})
     
     plt.savefig(f"./output/{plt_title}.png", dpi=100)
     plt.close()

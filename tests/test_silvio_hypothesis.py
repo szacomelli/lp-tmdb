@@ -73,4 +73,5 @@ class TestSilvio_Hypothesis(unittest.TestCase):
         with self.assertRaises(TypeError):
             most_voted_genre("kajhsdasd", "leão")
 
-
+if __file__ == "__main__":
+    unittest.main()
