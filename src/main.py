@@ -1,5 +1,7 @@
 import hipotese_silvio as sv
 import hipotese_leonardo as ln
-import hipotese_dilmar as dm
+import dilmar_hypothesis as dm
 import filter
+
+dm.dilmar_hypotesis(15, 150)
 
