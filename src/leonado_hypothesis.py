@@ -260,9 +260,6 @@ def display_analysis(df: pd.DataFrame) -> None:
     df_filtered_final = df[['name', 'number_of_episodes', 'number_of_seasons', 'avg_ep_per_season', 'vote_average', 
                             'popularity', 'category_bin_iqr', 'category_bin_outliers']]
     df_filtered_final = df_filtered_final.sort_values(by='avg_ep_per_season', ascending=False)
-
-    # Saving the dataframe to a CSV file
-    df_filtered_final.to_csv('orderned_tmdb.csv', index=False)
     
     # Number of shows in each bin interval
     shows_per_bin_iqr = df_filtered_final['category_bin_iqr'].value_counts().sort_index()
@@ -433,6 +430,3 @@ def analysis(num_bins: int = 5) -> None:
     
     display_analysis(df_filtered)
     plot_charts(df_filtered)
-
-# Read the dataset and run the analysis
-analysis()

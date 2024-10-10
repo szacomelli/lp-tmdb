@@ -8,6 +8,58 @@ file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data/
 raw_file = pd.read_csv(file_path, delimiter=",")
 
 def filter_first(votes_minimum: int = 0) -> pd.DataFrame:
+    """
+    Filters the TMDB TV Shows database by applying some initial criteria based on the number of votes
+    and episodes, and ensures that shows with episodes but no seasons are assigned at least one season.
+
+    Parameters
+    ----------
+    votes_minimum : int, default 0
+        The minimum number of votes that a show must have to be included in the filtered dataset.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The filtered version of the dataset that meets the conditions of having at least the minimum
+        number of votes and at least one episode.
+
+    Raises
+    ------
+    None
+
+    Examples
+    --------
+    >>> filter_first(10)
+                            name  number_of_episodes  number_of_seasons  vote_average  popularity  avg_ep_per_season
+    0          Game of Thrones                  73                  8         8.442    1083.917                9.0
+    1              Money Heist                  41                  3         8.257      96.354               13.0
+    2          Stranger Things                  34                  4         8.624     185.711                8.0
+    3         The Walking Dead                 177                 11         8.121     489.746               16.0
+    4                  Lucifer                  93                  6         8.486     416.668               15.0
+    ...                    ...                 ...                ...           ...         ...                ...
+    12023     Tonhon Chonlatee                  10                  1         5.850       4.153               10.0
+    12024  Good Eats: Reloaded                  26                  2         9.500       2.522               13.0
+    12025  Melur Untuk Firdaus                  64                  2         5.700      81.700               32.0
+    12026  Double Shot at Love                  44                  3         8.600       7.299               14.0
+    12027   The Private School                 148                  5         7.300       8.604               29.0
+
+    [12001 rows x 6 columns]
+    >>> filter_first(0)
+                                                    name  number_of_episodes  number_of_seasons  vote_average  popularity  avg_ep_per_season
+    0                                 Game of Thrones                  73                  8         8.442    1083.917                9.0
+    1                                     Money Heist                  41                  3         8.257      96.354               13.0
+    2                                 Stranger Things                  34                  4         8.624     185.711                8.0
+    3                                The Walking Dead                 177                 11         8.121     489.746               16.0
+    4                                         Lucifer                  93                  6         8.486     416.668               15.0
+    ...                                           ...                 ...                ...           ...         ...                ...
+    57497            Survival Squad - Mission: Canada                  10                  1        10.000       3.842               10.0
+    57498                      Live - Non è la D'Urso                  14                  1         5.000       0.600               14.0
+    57499                  Sweet Home season 2 (2023)                   8                  1         8.000       1.960                8.0
+    57500                         Naomi's New Morning                 107                  3         5.000      69.703               35.0
+    57501  Kamen Rider Gotchard VS Kamen Rider Legend                   2                  1         9.000       3.842                2.0
+
+    [55661 rows x 6 columns]
+    """
     # Ensure that shows with episodes but no seasons are assigned at least one season
     raw_file.loc[(raw_file['number_of_episodes'] > 0) & (raw_file['number_of_seasons'] == 0), 'number_of_seasons'] = 1
 
@@ -17,6 +69,7 @@ def filter_first(votes_minimum: int = 0) -> pd.DataFrame:
     
     df_index = df_filtered[['name', 'vote_count', 'vote_average', 'number_of_episodes']].replace(to_replace=0, value=np.nan).dropna().index
     df_filtered = df_filtered.loc[df_index].copy()
+    df_filtered = df_filtered[['name', 'number_of_episodes', 'number_of_seasons', 'vote_average', 'popularity']]
     
     # Calculate the average number of episodes per season
     df_filtered['avg_ep_per_season'] = np.floor(df_filtered['number_of_episodes'] / df_filtered['number_of_seasons'])
@@ -174,5 +227,3 @@ def filter_third(shows_minimum : int, votes_minimum : int=1) -> pd.DataFrame:
     sub_data = flt_data[['networks', 'genres']].copy()
     net_list = (sub_data.groupby('networks').count() > shows_minimum).replace(to_replace=False, value=np.nan).dropna().reset_index()['networks'].tolist()
     return flt_data[flt_data['networks'].isin(net_list)].copy()
-
-
