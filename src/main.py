@@ -1,5 +1,5 @@
-import hipotese_silvio as sv
-import hipotese_leonardo as ln
+import silvio_hypothesis as sv
+import leonado_hypothesis as ln
 import dilmar_hypothesis as dm
 import filter
 

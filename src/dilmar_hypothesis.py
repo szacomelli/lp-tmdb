@@ -63,7 +63,7 @@ def dilmar_hypotesis(shows_minimum : int, votes_minimum : int):
             sns.barplot(x='networks', y='popularity', data = df_filtrado)
             plt.xticks(rotation=45, ha='right', fontsize = 10)
             plt.title(f"Vote average bin: {i}", fontsize=16)
-            plt.savefig(f'./output/grafico{bins_intervals.index(i)}.png')
+            plt.savefig(f'./output/graph{bins_intervals.index(i)}.png')
             fig_legend = plt.figure(figsize=(25, 10))
         # Make a graph for each interval
     except OverflowError:
