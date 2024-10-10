@@ -268,8 +268,6 @@ def display_analysis(df: pd.DataFrame) -> None:
     shows_per_bin_iqr = df_filtered_final['category_bin_iqr'].value_counts().sort_index()
 
     shows_per_bin_outliers = df_filtered_final['category_bin_outliers'].value_counts().sort_index()
-    
-   
 
 # Function to plot bar charts with the average ratings per bin and distribution
 def plot_charts(df: pd.DataFrame) -> None:

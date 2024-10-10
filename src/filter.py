@@ -147,13 +147,17 @@ def filter_second(shows_minimum : int, date_interval : list[int]=[0, 9999]) -> p
     if date_interval[0] > date_interval[1]:
         raise ValueError("the first element of date_interval must be less or equal the second")
     
+    # drop nan or nulled rows
     raw_data = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'genres', 'networks', 'first_air_date']].replace(to_replace=0, value=np.nan).dropna()
+    # drop rows that aren't in the range of the years passed
     data_index = raw_data[[int(item[0]) >= date_interval[0] and int(item[0]) <= date_interval[1] for item in raw_data['first_air_date'].str.split('-')[:].tolist()]].index
     flt_data = (raw_file.loc[data_index]).copy()
+    # taking every row with more than 1 value per field and creating new rows for each value encontered
     flt_data['genres'] = flt_data['genres'].str.split(", ")
     flt_data['networks'] = flt_data['networks'].str.split(", ")
     flt_data = flt_data.explode('genres').explode('networks')
     spl_data = flt_data[['networks', 'genres']].copy()
+    # mantaining just the networks with a minimum count of shows
     net_list = (spl_data.groupby('networks').count() > shows_minimum).replace(to_replace=False, value=np.nan).dropna().reset_index()['networks'].tolist()
     flt_data = flt_data[flt_data['networks'].isin(net_list)]
     return flt_data.copy()
@@ -221,9 +225,11 @@ def filter_third(shows_minimum : int, votes_minimum : int=1) -> pd.DataFrame:
     if not isinstance(shows_minimum, int) or not isinstance(votes_minimum, int): 
         raise TypeError("check the argument types")
     
+    # drop nan or nulled rows
     data_idx = raw_file[['name', 'vote_count', 'vote_average', 'popularity', 'networks']].replace(to_replace=0, value=np.nan).dropna().index
     raw_data = raw_file.loc[data_idx]
     flt_data = (raw_data[raw_data['vote_count'] >= votes_minimum]).copy()
     sub_data = flt_data[['networks', 'genres']].copy()
+    # filter by minimum number of shows per network
     net_list = (sub_data.groupby('networks').count() > shows_minimum).replace(to_replace=False, value=np.nan).dropna().reset_index()['networks'].tolist()
     return flt_data[flt_data['networks'].isin(net_list)].copy()

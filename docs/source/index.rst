@@ -8,18 +8,18 @@ lp-tmdb documentation
 
 Welcome to the lp-tmdb documentation! Below, you can access all our content, which includes:
 
-* Analysis of the data collected from the hypotheses
+* Analysis of the data collected from our hypotheses
 * Documentation of the .py modules used to collect the data
 
 |
 
-Analysis:
+Analyses:
 =========
 .. toctree::
    :maxdepth: 2
 
    introduction
-   analysis
+   
 
 |
 
@@ -34,8 +34,8 @@ Contents:
    
 |
 
-Indices and tables
-==================
+Indices and tables:
+===================
 
 * :ref:`genindex`
 * :ref:`modindex`
