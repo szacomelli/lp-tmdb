@@ -44,6 +44,7 @@ def filter_first(votes_minimum: int = 0) -> pd.DataFrame:
     12027   The Private School                 148                  5         7.300       8.604               29.0
 
     [12001 rows x 6 columns]
+    
     >>> filter_first(0)
                                                     name  number_of_episodes  number_of_seasons  vote_average  popularity  avg_ep_per_season
     0                                 Game of Thrones                  73                  8         8.442    1083.917                9.0

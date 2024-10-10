@@ -1,7 +1,7 @@
-hipotese\_leonardo module
+dilmar\_hypothesis module
 =========================
 
-.. automodule:: hipotese_leonardo
+.. automodule:: dilmar_hypothesis
    :members:
    :undoc-members:
    :show-inheritance:

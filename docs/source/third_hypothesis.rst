@@ -21,19 +21,19 @@ of 2,100 lines.
 The graphs obtained
 -------------------
 
-.. image:: ./output/graph0
+.. image:: ../output/graph0.png
 
-.. image:: ./output/graph1
+.. image:: ../output/graph1.png
 
-.. image:: ./output/graph2
+.. image:: ../output/graph2.png
 
-.. image:: ./output/graph3
+.. image:: ../output/graph3.png
 
-.. image:: ./output/graph4
+.. image:: ../output/graph4.png
 
-.. image:: ./output/graph5
+.. image:: ../output/graph5.png
 
-.. image:: ./output/graph6
+.. image:: ../output/graph6.png
 
 
 Results from data

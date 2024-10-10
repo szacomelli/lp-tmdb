@@ -1,4 +1,4 @@
-import leonado_hypothesis as ln
+import leonardo_hypothesis as ln
 import dilmar_hypothesis as dm
 import silvio_hypothesis as sv
 

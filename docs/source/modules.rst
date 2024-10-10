@@ -5,7 +5,7 @@ src
    :maxdepth: 4
 
    filter
-   hipotese_dilmar
-   hipotese_leonardo
+   dilmar_hypothesis
+   leonardo_hypothesis
    main
    silvio_hypothesis

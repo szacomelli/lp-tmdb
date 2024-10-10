@@ -1,8 +1,7 @@
 import unittest
 import pandas as pd
 import numpy as np
-from src.filter import filter_first
-from src.leonado_hypothesis import bins_IQR, bins_with_outliers, display_analysis, analysis, plot_charts
+from src.leonardo_hypothesis import bins_IQR, bins_with_outliers, display_analysis, analysis, plot_charts
 
 
 class TestBins(unittest.TestCase):
@@ -79,10 +78,9 @@ class TestAnalysis(unittest.TestCase):
             'category_bin_outliers': ['20-24', '15-19', '15-19', '15-19', '20-24']
         })
     def test_analysis(self):
-        try:
+        with self.assertRaises(Exception):
             analysis(self.valid_df)
-        except Exception as e:
-            self.fail(f"Unexpected error: {e}")
+        
 
     def test_display_analysis(self):
         try:

@@ -16,7 +16,7 @@ def bins_IQR(df: pd.DataFrame) -> list:
         DataFrame containing the data.
 
     Raises
-    ------
+    -------
     ValueError
         If the number of bins and labels does not match.
         If DataFrame is empty.
@@ -24,7 +24,7 @@ def bins_IQR(df: pd.DataFrame) -> list:
         If 'avg_ep_per_season' contains non-numeric values.
     TypeError
         if type(df) is not pd.DataFrame
-    
+        
     Returns
     -------
     list
@@ -34,6 +34,7 @@ def bins_IQR(df: pd.DataFrame) -> list:
     -------
     This example uses a set of values ranging from 10 to 100. The function then creates bins of approximately 
     equal size using the interquartile range (IQR), adjusting the last bin to include the maximum value.
+
     >>> df = pd.DataFrame({'avg_ep_per_season': [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]})
     >>> bin_edges, labels = bins_IQR(df)
     >>> print(bin_edges)
@@ -45,6 +46,7 @@ def bins_IQR(df: pd.DataFrame) -> list:
     In this example, the DataFrame contains small values (from 1 to 10). The function creates almost unitary bins, 
     demonstrating the function's behavior when the values are in a small range. This illustrates how the 
     function handles data with little variation.
+
     >>> df = pd.DataFrame({'avg_ep_per_season': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]})
     >>> bin_edges, labels = bins_IQR(df)
     >>> print(bin_edges)
@@ -55,6 +57,7 @@ def bins_IQR(df: pd.DataFrame) -> list:
     This example has larger and slightly more distant values, ranging from 50 to 140. The function creates bins through 
     a wider range, adapting to data with high and widely distributed values. This illustrates how the function 
     handles data with greater variation.
+
     >>> df = pd.DataFrame({'avg_ep_per_season': [50, 60, 70, 80, 90, 100, 110, 120, 130, 140]})
     >>> bin_edges, labels = bins_IQR(df)
     >>> print(bin_edges)
@@ -215,7 +218,7 @@ def display_analysis(df: pd.DataFrame) -> None:
         If 'avg_ep_per_season' column is missing or contains NaN values.
         If 'avg_ep_per_season' contains non-numeric values.
     TypeError
-        if type(df) is not pd.DataFrame
+        If type(df) is not pd.DataFrame.
 
     Returns
     -------
@@ -225,6 +228,7 @@ def display_analysis(df: pd.DataFrame) -> None:
     -------
     This example creates a fictitious DataFrame with information about 5 TV series. The function then counts how many series 
     exist within each bin and displays these results, also showing the total number of series in the DataFrame at the end.
+    
     >>> df = pd.DataFrame({
             'name': ['Serie A', 'Serie B', 'Serie C', 'Serie D', 'Serie E'],
             'number_of_episodes': [50, 100, 200, 250, 300],
@@ -235,18 +239,19 @@ def display_analysis(df: pd.DataFrame) -> None:
             'category_bin_iqr': ['15-19', '20-24', '25 or more', '20-24', '25 or more'],
             'category_bin_outliers': ['15-19', '20-24', '25 or more', '20-24', '25 or more']
         })
+
     >>> display_analysis(df)
-        category_bin_iqr
-        15-19         1
-        20-24         2
-        25 or more    2
-        Name: count, dtype: int64
-        category_bin_outliers
-        15-19         1
-        20-24         2
-        25 or more    2
-        Name: count, dtype: int64
-        Number of shows in the DataFrame: 5
+    category_bin_iqr
+       15-19         1
+       20-24         2
+       25 or more    2
+       Name: count, dtype: int64
+       category_bin_outliers
+       15-19         1
+       20-24         2
+       25 or more    2
+       Name: count, dtype: int64
+    Number of shows in the DataFrame: 5
     """
     if not isinstance(df, pd.DataFrame):
         raise TypeError("Check the types of the passed arguments")
